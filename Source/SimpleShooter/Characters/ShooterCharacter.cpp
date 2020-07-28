@@ -2,6 +2,7 @@
 
 
 #include "ShooterCharacter.h"
+#include "SimpleShooter/Gun.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -30,6 +31,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis(TEXT("LookRightRate"), this, &AShooterCharacter::LookRightRate);
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +39,10 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
 }
 
 void AShooterCharacter::MoveForward(float AxisValue)
@@ -57,4 +63,9 @@ void AShooterCharacter::LookUpRate(float AxisValue)
 void AShooterCharacter::LookRightRate(float AxisValue)
 {
 	AddControllerYawInput(AxisValue * RotationRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AShooterCharacter::Shoot()
+{
+	Gun->PullTrigger();
 }
