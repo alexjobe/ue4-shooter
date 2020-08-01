@@ -1,6 +1,5 @@
 // Made by Alex Jobe
 
-
 #include "ShooterCharacter.h"
 #include "SimpleShooter/Gun.h"
 
@@ -16,7 +15,6 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
